@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irodori-TTS Colab UI ガイド</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      background: #f5f6fa;
+      color: #2d2d2d;
+      line-height: 1.7;
+    }
+
+    /* ── ヘッダー ── */
+    header {
+      background: linear-gradient(135deg, #6c63ff 0%, #48c6ef 100%);
+      color: #fff;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+    header p  { font-size: 1.05rem; opacity: .88; }
+    .badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 4px 14px;
+      background: rgba(255,255,255,.22);
+      border-radius: 20px;
+      font-size: .85rem;
+    }
+
+    /* ── レイアウト ── */
+    main { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    section { margin-bottom: 52px; }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #6c63ff;
+      border-left: 4px solid #6c63ff;
+      padding-left: 12px;
+      margin-bottom: 20px;
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 20px 0 8px;
+      color: #444;
+    }
+    p { margin-bottom: 12px; color: #444; }
+
+    /* ── ステップ ── */
+    .steps { counter-reset: step; display: flex; flex-direction: column; gap: 12px; }
+    .step {
+      counter-increment: step;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .step::before {
+      content: counter(step);
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      background: #6c63ff;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .95rem;
+    }
+    .step-body strong { display: block; margin-bottom: 4px; }
+    .step-body p { margin: 0; font-size: .93rem; }
+
+    /* ── UI 図解 ── */
+    .ui-diagram {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.08);
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .ui-titlebar {
+      background: #6c63ff;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: .9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ui-body { padding: 20px; }
+    .ui-row { display: flex; gap: 16px; margin-bottom: 12px; }
+    .ui-col { flex: 1; }
+
+    .ui-field {
+      background: #f7f8fc;
+      border: 1.5px solid #e0e3ef;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .ui-field-label {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    .ui-field-value {
+      font-size: .88rem;
+      color: #555;
+    }
+    .ui-textarea {
+      min-height: 64px;
+      font-size: .83rem;
+      color: #666;
+      white-space: pre-wrap;
+    }
+    .ui-slider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .ui-slider-track {
+      flex: 1;
+      height: 6px;
+      background: #e0e3ef;
+      border-radius: 3px;
+      position: relative;
+    }
+    .ui-slider-fill {
+      height: 100%;
+      background: #6c63ff;
+      border-radius: 3px;
+    }
+    .ui-slider-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px; height: 14px;
+      background: #6c63ff;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    }
+    .ui-slider-val { font-size: .85rem; font-weight: 600; color: #6c63ff; min-width: 36px; text-align: right; }
+    .ui-slider-label { font-size: .8rem; color: #666; margin-bottom: 2px; }
+
+    .ui-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .ui-preset-btn {
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1.5px solid #6c63ff;
+      color: #6c63ff;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: default;
+    }
+    .ui-preset-btn.active {
+      background: #6c63ff;
+      color: #fff;
+    }
+
+    .ui-btn {
+      width: 100%;
+      padding: 14px;
+      background: #6c63ff;
+      color: #fff;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: .02em;
+    }
+    .ui-audio {
+      background: #f0f0ff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .ui-waveform {
+      height: 36px;
+      background: repeating-linear-gradient(
+        90deg,
+        #6c63ff 0px, #6c63ff 2px,
+        transparent 2px, transparent 6px
+      );
+      border-radius: 4px;
+      opacity: .5;
+      margin-bottom: 6px;
+    }
+    .ui-audio-controls { display: flex; align-items: center; gap: 10px; font-size: .8rem; color: #888; }
+    .ui-play { width: 28px; height: 28px; background: #6c63ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: .9rem; }
+
+    .ui-status {
+      background: #f0fff4;
+      border: 1.5px solid #52c07a;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: .85rem;
+      color: #2d7a4a;
+      margin-bottom: 10px;
+    }
+
+    .ui-dl-row { display: flex; gap: 10px; }
+    .ui-dl-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+    .ui-dl-btn.primary { background: #6c63ff; color: #fff; }
+    .ui-dl-btn.secondary { background: #fff; color: #6c63ff; border: 2px solid #6c63ff; }
+
+    /* ── 注釈バルーン ── */
+    .annotation {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      border-radius: 0 10px 10px 0;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: .9rem;
+      color: #555;
+    }
+    .annotation-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    /* ── パラメータ表 ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    thead { background: #6c63ff; color: #fff; }
+    th, td { padding: 12px 16px; text-align: left; font-size: .9rem; }
+    tbody tr:nth-child(even) { background: #f7f8fc; }
+    tbody tr:hover { background: #eef0ff; }
+    td:first-child { font-weight: 600; color: #6c63ff; }
+    td code {
+      background: #eef0ff;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: .85rem;
+      color: #5a52d5;
+    }
+
+    /* ── プリセット一覧 ── */
+    .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .preset-grid { grid-template-columns: 1fr; } }
+    .preset-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      border-left: 4px solid #6c63ff;
+    }
+    .preset-name { font-weight: 700; font-size: .95rem; margin-bottom: 6px; color: #333; }
+    .preset-text { font-size: .83rem; color: #666; line-height: 1.5; }
+
+    /* ── tips ── */
+    .tip-list { display: flex; flex-direction: column; gap: 10px; }
+    .tip {
+      display: flex;
+      gap: 12px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      font-size: .92rem;
+    }
+    .tip-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+    /* ── フッター ── */
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      font-size: .85rem;
+      color: #999;
+      border-top: 1px solid #e5e7ef;
+    }
+    footer a { color: #6c63ff; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎙️ Irodori-TTS</h1>
+  <p>Google Colab で動く日本語ローカル音声合成 UI ガイド</p>
+  <span class="badge">Aratako/Irodori-TTS-500M-v2-VoiceDesign</span>
+</header>
+
+<main>
+
+  <!-- ── セットアップ ── -->
+  <section>
+    <h2>セットアップ手順</h2>
+    <p>Colab でノートブックを開いたら、セルを上から順番に実行してください。</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-body">
+          <strong>ランタイムを T4 GPU に変更</strong>
+          <p>ランタイム → ランタイムのタイプを変更 → <b>T4 GPU</b> を選択して保存。GPU なしでは動作しません。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <strong>セットアップセルを実行</strong>
+          <p>Irodori-TTS リポジトリのクローンと依存ライブラリのインストールを行います。初回は数分かかります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <strong>モデル読み込みセルを実行</strong>
+          <p>HuggingFace から約 2GB のモデルをダウンロードして読み込みます。初回のみダウンロードが発生します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-body">
+          <strong>Gradio UI セルを実行</strong>
+          <p>UI サーバーが起動します。セル出力に表示される <b>public URL</b>（<code>https://xxxx.gradio.live</code>）をブラウザで開いてください。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UI 図解 ── -->
+  <section>
+    <h2>UI の構成</h2>
+
+    <div class="ui-diagram">
+      <div class="ui-titlebar">🎙️ Irodori-TTS 音声合成</div>
+      <div class="ui-body">
+
+        <div class="ui-row">
+          <!-- 左カラム -->
+          <div class="ui-col" style="flex:3">
+            <div class="ui-field">
+              <div class="ui-field-label">① 読み上げテキスト</div>
+              <div class="ui-field-value ui-textarea">こんにちは。今日はどんなお話をしましょうか？&#10;もしよければ、ゆっくりお話ししますね。</div>
+            </div>
+            <div class="ui-field">
+              <div class="ui-field-label">② 声質・感情プロンプト（キャプション）</div>
+              <div class="ui-field-value ui-textarea">落ち着いた女性の声で、近い距離感でやわらかく自然に読み上げてください。</div>
+            </div>
+            <div style="font-size:.8rem;font-weight:700;color:#888;margin-bottom:6px;">③ プリセット</div>
+            <div class="ui-presets">
+              <span class="ui-preset-btn active">落ち着いた女性</span>
+              <span class="ui-preset-btn">明るい女性</span>
+              <span class="ui-preset-btn">落ち着いた男性</span>
+              <span class="ui-preset-btn">疲れた声</span>
+              <span class="ui-preset-btn">アナウンサー</span>
+            </div>
+          </div>
+
+          <!-- 右カラム -->
+          <div class="ui-col" style="flex:2">
+            <div class="ui-slider-label">④ ステップ数（多いほど高品質・低速）</div>
+            <div class="ui-slider">
+              <div class="ui-slider-track">
+                <div class="ui-slider-fill" style="width:50%"></div>
+                <div class="ui-slider-thumb" style="left:50%"></div>
+              </div>
+              <span class="ui-slider-val">40</span>
+            </div>
+            <div class="ui-slider-label">⑤ CFG スケール（テキスト）</div>
+            <div class="ui-slider">
+              <div class="ui-slider-track">
+                <div class="ui-slider-fill" style="width:33%"></div>
+                <div class="ui-slider-thumb" style="left:33%"></div>
+              </div>
+              <span class="ui-slider-val">2.0</span>
+            </div>
+            <div class="ui-slider-label">⑥ CFG スケール（キャプション）</div>
+            <div class="ui-slider">
+              <div class="ui-slider-track">
+                <div class="ui-slider-fill" style="width:33%"></div>
+                <div class="ui-slider-thumb" style="left:33%"></div>
+              </div>
+              <span class="ui-slider-val">2.0</span>
+            </div>
+            <div class="ui-slider-label">⑦ シード（-1 でランダム）</div>
+            <div class="ui-field" style="margin-bottom:0">
+              <div class="ui-field-value">42</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 合成ボタン -->
+        <div class="ui-btn">🎙️ 合成する　⑧</div>
+
+        <!-- 出力 -->
+        <div class="ui-audio">
+          <div style="font-size:.8rem;font-weight:700;color:#888;margin-bottom:8px;">⑨ 出力音声</div>
+          <div class="ui-waveform"></div>
+          <div class="ui-audio-controls">
+            <div class="ui-play">▶</div>
+            <span>0:00</span>
+            <span style="flex:1;height:4px;background:#ddd;border-radius:2px;display:block"></span>
+            <span>0:09</span>
+          </div>
+        </div>
+
+        <div class="ui-status">✅ 完了（シード: 42、サンプルレート: 48000 Hz）　⑩</div>
+
+        <div class="ui-dl-row">
+          <div class="ui-dl-btn primary">⬇️ WAV をダウンロード　⑪</div>
+          <div class="ui-dl-btn secondary">⬇️ MP3 をダウンロード　⑫</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 各項目の説明 ── -->
+  <section>
+    <h2>各項目の説明</h2>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>項目</th><th>説明</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>①</td>
+          <td>読み上げテキスト</td>
+          <td>音声に変換したい日本語テキストを入力します。長い文章は自動的に処理されます。</td>
+        </tr>
+        <tr>
+          <td>②</td>
+          <td>声質・感情プロンプト</td>
+          <td>声の雰囲気・感情・話し方を自由なテキストで指定します。日本語・英語・絵文字が使えます。空欄にするとモデルのデフォルト声質になります。</td>
+        </tr>
+        <tr>
+          <td>③</td>
+          <td>プリセット</td>
+          <td>よく使う声質キャプションをワンクリックで入力欄に反映します。5種類を用意しています。</td>
+        </tr>
+        <tr>
+          <td>④</td>
+          <td>ステップ数</td>
+          <td>拡散モデルのサンプリングステップ数。多いほど高品質ですが生成に時間がかかります。<code>20〜80</code>、デフォルト <code>40</code>。</td>
+        </tr>
+        <tr>
+          <td>⑤</td>
+          <td>CFG スケール（テキスト）</td>
+          <td>テキスト内容をどれだけ忠実に音声に反映するかの強度。<code>0.5〜5.0</code>、デフォルト <code>2.0</code>。</td>
+        </tr>
+        <tr>
+          <td>⑥</td>
+          <td>CFG スケール（キャプション）</td>
+          <td>声質・感情プロンプトをどれだけ強く反映するかの強度。<code>0.5〜5.0</code>、デフォルト <code>2.0</code>。</td>
+        </tr>
+        <tr>
+          <td>⑦</td>
+          <td>シード</td>
+          <td>乱数シードを固定することで同じ結果を再現できます。<code>-1</code> にするたびランダムな声が生成されます。</td>
+        </tr>
+        <tr>
+          <td>⑧</td>
+          <td>合成するボタン</td>
+          <td>クリックすると音声生成を開始します。T4 GPU で 10 秒程度かかります。</td>
+        </tr>
+        <tr>
+          <td>⑨</td>
+          <td>出力音声プレーヤー</td>
+          <td>生成された音声をブラウザ上で再生できます。</td>
+        </tr>
+        <tr>
+          <td>⑩</td>
+          <td>ステータス</td>
+          <td>生成完了後に使用されたシード番号とサンプルレートを表示します。</td>
+        </tr>
+        <tr>
+          <td>⑪</td>
+          <td>WAV をダウンロード</td>
+          <td>生成音声を WAV 形式（非圧縮・高音質）でダウンロードします。</td>
+        </tr>
+        <tr>
+          <td>⑫</td>
+          <td>MP3 をダウンロード</td>
+          <td>生成音声を MP3 形式（192kbps・ファイルサイズ小）でダウンロードします。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── プリセット一覧 ── -->
+  <section>
+    <h2>プリセットキャプション一覧</h2>
+    <div class="preset-grid">
+      <div class="preset-card">
+        <div class="preset-name">落ち着いた女性</div>
+        <div class="preset-text">落ち着いた女性の声で、近い距離感でやわらかく自然に読み上げてください。</div>
+      </div>
+      <div class="preset-card">
+        <div class="preset-name">明るい女性 😊</div>
+        <div class="preset-text">明るく元気な若い女性の声で、笑顔が伝わるように読み上げてください。😊</div>
+      </div>
+      <div class="preset-card">
+        <div class="preset-name">落ち着いた男性</div>
+        <div class="preset-text">落ち着いた中年男性の声で、ゆっくりと丁寧に読み上げてください。</div>
+      </div>
+      <div class="preset-card">
+        <div class="preset-name">疲れた声 😔</div>
+        <div class="preset-text">少し疲れた様子で、感情を込めてつぶやくように読み上げてください。😔</div>
+      </div>
+      <div class="preset-card" style="grid-column: 1 / -1">
+        <div class="preset-name">アナウンサー</div>
+        <div class="preset-text">NHKのアナウンサーのように、明瞭で標準的な発音で読み上げてください。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 使いこなしのヒント ── -->
+  <section>
+    <h2>使いこなしのヒント</h2>
+    <div class="tip-list">
+      <div class="tip">
+        <div class="tip-icon">🎲</div>
+        <div>
+          <strong>シードを -1 にしてバリエーションを探す</strong><br>
+          同じテキスト・同じキャプションでも、シードが変わると声の雰囲気が微妙に変化します。気に入った音声が出たときのシード番号をステータス欄でメモしておくと再現できます。
+        </div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">✏️</div>
+        <div>
+          <strong>キャプションに絵文字を使う</strong><br>
+          「😊 笑顔で」「😢 悲しそうに」「😤 怒りながら」など、絵文字は感情表現に効果的です。Irodori-TTS は絵文字を感情制御のヒントとして活用します。
+        </div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">⚡</div>
+        <div>
+          <strong>ステップ数を下げて速度重視にする</strong><br>
+          ステップ数を <strong>20</strong> 程度に下げると生成速度が上がります。クオリティを確認しながら調整してください。
+        </div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">📋</div>
+        <div>
+          <strong>CFG スケールで個性を調整する</strong><br>
+          CFG（キャプション）を上げるとキャプションで指定した声質が強調されます。上げすぎると不自然になることがあるので <strong>1.5〜3.0</strong> の範囲で試してみてください。
+        </div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">💾</div>
+        <div>
+          <strong>ダウンロード形式の使い分け</strong><br>
+          WAV は無圧縮なので音編集や高品質用途に、MP3 はファイルサイズを抑えたい場合（Web 公開・SNS 投稿など）に適しています。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 注意事項 ── -->
+  <section>
+    <h2>注意事項</h2>
+    <div class="annotation">
+      <span class="annotation-icon">⚠️</span>
+      <span>Colab の無料プランでは GPU 使用時間に制限があります。長時間使用しないときはセッションを終了し、GPU リソースを節約してください。</span>
+    </div>
+    <div class="annotation">
+      <span class="annotation-icon">🔗</span>
+      <span><code>share=True</code> で発行される public URL は Colab セッションが終了すると無効になります。セッションを再起動したら Gradio UI セルを再実行してください。</span>
+    </div>
+    <div class="annotation">
+      <span class="annotation-icon">📦</span>
+      <span>初回実行時はモデル（約 2GB）と依存ライブラリのダウンロードに数分かかります。2回目以降はキャッシュが利用されるため短縮されます。</span>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    モデル:
+    <a href="https://github.com/Aratako/Irodori-TTS" target="_blank">Aratako/Irodori-TTS</a>
+    &nbsp;|&nbsp;
+    ノートブック:
+    <a href="https://github.com/WOCae/B202-irodori-tts" target="_blank">WOCae/B202-irodori-tts</a>
+  </p>
+</footer>
+
+</body>
+</html>
