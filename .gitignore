@@ -1,0 +1,14 @@
+# Claude Code settings
+.claude/
+
+# Dev notes
+覚書.txt
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
