@@ -306,7 +306,7 @@
 <header>
   <h1>🎙️ Irodori-TTS</h1>
   <p>Google Colab で動く日本語ローカル音声合成 UI ガイド</p>
-  <span class="badge">Aratako/Irodori-TTS-500M-v2-VoiceDesign</span>
+  <span class="badge">Aratako/Irodori-TTS-v4.1-Small</span>
 </header>
 
 <main>
@@ -380,7 +380,7 @@
                 <div class="ui-slider-fill" style="width:50%"></div>
                 <div class="ui-slider-thumb" style="left:50%"></div>
               </div>
-              <span class="ui-slider-val">40</span>
+              <span class="ui-slider-val">自動</span>
             </div>
             <div class="ui-slider-label">⑤ CFG スケール（テキスト）</div>
             <div class="ui-slider">
@@ -388,7 +388,7 @@
                 <div class="ui-slider-fill" style="width:33%"></div>
                 <div class="ui-slider-thumb" style="left:33%"></div>
               </div>
-              <span class="ui-slider-val">2.0</span>
+              <span class="ui-slider-val">3.0</span>
             </div>
             <div class="ui-slider-label">⑥ CFG スケール（キャプション）</div>
             <div class="ui-slider">
@@ -396,7 +396,7 @@
                 <div class="ui-slider-fill" style="width:33%"></div>
                 <div class="ui-slider-thumb" style="left:33%"></div>
               </div>
-              <span class="ui-slider-val">2.0</span>
+              <span class="ui-slider-val">3.0</span>
             </div>
             <div class="ui-slider-label">⑦ シード（-1 でランダム）</div>
             <div class="ui-field" style="margin-bottom:0">
@@ -458,17 +458,17 @@
         <tr>
           <td>④</td>
           <td>ステップ数</td>
-          <td>拡散モデルのサンプリングステップ数。多いほど高品質ですが生成に時間がかかります。<code>20〜80</code>、デフォルト <code>40</code>。</td>
+          <td>拡散モデルのサンプリングステップ数。多いほど高品質ですが生成に時間がかかります。<code>0〜80</code>、デフォルト <code>0</code>（自動：通常 40 / MF 版 4）。</td>
         </tr>
         <tr>
           <td>⑤</td>
           <td>CFG スケール（テキスト）</td>
-          <td>テキスト内容をどれだけ忠実に音声に反映するかの強度。<code>0.5〜5.0</code>、デフォルト <code>2.0</code>。</td>
+          <td>テキスト内容をどれだけ忠実に音声に反映するかの強度。<code>0.5〜5.0</code>、デフォルト <code>3.0</code>。</td>
         </tr>
         <tr>
           <td>⑥</td>
           <td>CFG スケール（キャプション）</td>
-          <td>声質・感情プロンプトをどれだけ強く反映するかの強度。<code>0.5〜5.0</code>、デフォルト <code>2.0</code>。</td>
+          <td>声質・感情プロンプトをどれだけ強く反映するかの強度。<code>0.5〜5.0</code>、デフォルト <code>3.0</code>。</td>
         </tr>
         <tr>
           <td>⑦</td>
